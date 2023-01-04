@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+	<link rel="icon" type="image/x-icon" th:href="@{/favicon.ico}">
+
+    <title>esbuild Spring Boot demo</title>
+	
+	<script type="importmap" th:utext="${importMap}">
+	</script>
+
+	<script type="module" th:src="@{/frontend/main.js(rev=${appRevision})}"></script>
+	<link rel="stylesheet" type="text/css" th:href="@{/frontend/global.css(rev=${appRevision})}"/>
+  </head>
+  <body>
+	  <h1>esbuild Spring Boot demo</h1>
+  </body>
+</html>

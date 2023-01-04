@@ -1,0 +1,15 @@
+{
+	"compilerOptions": {
+		"target": "ESNext",
+		"module": "ESNext",
+		"lib": ["ESNext", "DOM"],
+		"jsx": "react",
+		"jsxFactory": "h",
+		"jsxFragmentFactory": "Fragment",
+		"isolatedModules": true,
+		"paths": {
+			"~/preact/dist/preact.module": ["./lib/preact/dist/preact.module.ts"],
+			"~/*": ["./src/*"]
+		}
+	}
+}

@@ -28,7 +28,7 @@ public class EsbuildDevserverAutoConfiguration {
 
 	@Bean
 	AppRevision appRevision(Optional<GitProperties> gitProperties) {
-		return new AppRevision(gitProperties.map(GitProperties::getShortCommitId).orElse("devel opment"));
+		return new AppRevision(gitProperties.map(GitProperties::getShortCommitId).orElse("development"));
 	}
 
 	@ConditionalOnClass(name = "org.springframework.boot.devtools.settings.DevToolsSettings")

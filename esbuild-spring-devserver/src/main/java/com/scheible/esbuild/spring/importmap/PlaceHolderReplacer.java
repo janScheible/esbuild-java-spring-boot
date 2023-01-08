@@ -14,7 +14,7 @@ class PlaceHolderReplacer {
 	static String replace(String importMapJson, Map<String, String> params) {
 		for (Map.Entry<String, String> param : params.entrySet()) {
 			importMapJson = importMapJson.replace(param.getKey(),
-					ImportMapper.APP_REVISION_PLACEHOLDER.equals(param.getValue())
+					ImportMapper.APP_REVISION_PLACEHOLDER.equals(param.getKey())
 					? UriUtils.encode(param.getValue(), StandardCharsets.UTF_8) : param.getValue());
 		}
 		

@@ -19,6 +19,7 @@ import java.nio.file.PathMatcher;
 import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.ExecutionException;
@@ -77,7 +78,9 @@ public class PrepareFrontendMojo extends AbstractMojo {
 			Collection<Path> nonTsSrcFiles = new ArrayList<>(srcFiles);
 			nonTsSrcFiles.removeAll(tsSrcFiles);
 
-			Collection<Path> tsLibFiles = getSrcFiles(libDir).stream().filter(TS_FILE_MATCHER::matches).toList();
+			Collection<Path> tsLibFiles = Files.exists(libDir) 
+					? getSrcFiles(libDir).stream().filter(TS_FILE_MATCHER::matches).toList() 
+					: Collections.emptyList();
 
 			Path importMapFile = outputDir.resolve("import-map.json");
 

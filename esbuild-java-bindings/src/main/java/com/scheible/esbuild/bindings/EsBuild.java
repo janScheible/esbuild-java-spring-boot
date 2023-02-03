@@ -1,7 +1,9 @@
 package com.scheible.esbuild.bindings;
 
 import com.scheible.esbuild.bindings.EsBuildProtocol.Packet;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.charset.StandardCharsets;
@@ -27,6 +29,8 @@ import org.slf4j.LoggerFactory;
  * @author sj
  */
 public class EsBuild {
+	
+	private static final List<String> STANDARD_RUN_FLAGS = List.of("--color=false");
 
 	private static final String[] STRING_ARRAY_TYPE = new String[]{};
 	private static final List<String> STANDARD_TRANSFORM_FLAGS = List.of("--log-level=silent", "--log-limit=0");
@@ -123,6 +127,46 @@ public class EsBuild {
 			}
 		});
 		this.readThread.setName("EsBuild Read Thread");
+	}
+	
+	public static String run(Path workDir, String... args) throws IOException, InterruptedException {
+		if(args.length == 0) {
+			throw new IllegalArgumentException("At least one argument must be passed!");
+		}
+		
+		Path executable = Executable.copyToTarget();
+
+		List<String> command = new ArrayList<>();
+		command.add(executable.toString());
+		command.addAll(STANDARD_RUN_FLAGS);
+		command.addAll(Arrays.asList(args));
+
+		ProcessBuilder builder = new ProcessBuilder(command).redirectErrorStream(true).directory(workDir.toFile());
+
+		Process process = builder.start();
+		
+		StringBuilder output = new StringBuilder();
+		String error = null;
+		try (BufferedReader stdoutReader = new BufferedReader(
+				new InputStreamReader(process.getInputStream(), StandardCharsets.UTF_8))) {
+			String line;
+			while ((line = stdoutReader.readLine()) != null) {
+				output.append(line).append("\n");
+				
+				if (error == null && line.contains("[ERROR]")) {
+					error = line;
+				}
+			}
+		}
+
+		int exitCode = process.waitFor();
+
+		if (exitCode != 0) {
+			throw new IllegalStateException("EsBuild error '" + (error == null ? "unknown" : error)
+					+ "' with exit code " + exitCode + "!");
+		}
+
+		return output.toString();
 	}
 
 	public static EsBuild start() throws IOException {		

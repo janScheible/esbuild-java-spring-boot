@@ -69,13 +69,18 @@ class Executable {
 
 		String executableName = getExecutableName(operatingSystem);
 		Path file = Path.of("./target").resolve(executableName);
-		Files.createDirectories(file.getParent());
-		try (InputStream executableInput = Thread.currentThread().getContextClassLoader().getResourceAsStream(executableName)) {
-			Files.copy(executableInput, file, StandardCopyOption.REPLACE_EXISTING);
-		}
 
-		if (operatingSystem == OperatingSystem.LINUX) {
-			makeExecutable(file);
+		synchronized (Executable.class) {
+			if (!Files.exists(file)) {
+				Files.createDirectories(file.getParent());
+				try (InputStream executableInput = Thread.currentThread().getContextClassLoader().getResourceAsStream(executableName)) {
+					Files.copy(executableInput, file, StandardCopyOption.REPLACE_EXISTING);
+				}
+
+				if (operatingSystem == OperatingSystem.LINUX) {
+					makeExecutable(file);
+				}
+			}
 		}
 
 		return file;

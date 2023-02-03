@@ -12,6 +12,7 @@ import jakarta.servlet.ServletContext;
 import java.util.Optional;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
+import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingClass;
 import org.springframework.boot.info.GitProperties;
 import org.springframework.context.annotation.Bean;
@@ -27,6 +28,7 @@ import org.springframework.core.io.ResourceLoader;
 public class EsbuildDevserverAutoConfiguration {
 
 	@Bean
+	@ConditionalOnMissingBean
 	AppRevision appRevision(Optional<GitProperties> gitProperties) {
 		return new AppRevision(gitProperties.map(GitProperties::getShortCommitId).orElse("development"));
 	}
@@ -35,16 +37,19 @@ public class EsbuildDevserverAutoConfiguration {
 	static class DevToolsEnvironment {
 
 		@Bean
+		@ConditionalOnMissingBean
 		ImportMapGenerator importMapGenerator(ResourceLoader resourceLoader) {
 			return new DevToolsImportMapGenerator(resourceLoader);
 		}
 
 		@Bean
+		@ConditionalOnMissingBean
 		EsBuildService buildService(ResourceLoader resourceLoader) {
 			return new EsBuildService(resourceLoader);
 		}
 
 		@Bean
+		@ConditionalOnMissingBean
 		EsBuildFilter esBuildFilter(ResourceLoader resourceLoader, ServletContext servletContext, EsBuildService esBuildService) {
 			return new EsBuildFilter(resourceLoader, servletContext, esBuildService);
 		}
@@ -54,6 +59,7 @@ public class EsbuildDevserverAutoConfiguration {
 	static class JarEnvironment {
 
 		@Bean
+		@ConditionalOnMissingBean
 		ImportMapGenerator importMapGenerator() {
 			return new JarImportMapGenerator();
 		}

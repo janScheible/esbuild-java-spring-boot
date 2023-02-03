@@ -45,8 +45,9 @@ public class EsBuildFilter implements Filter {
 		if (servletRequest instanceof HttpServletRequest request && servletResponse instanceof HttpServletResponse response) {
 			UriComponents uriComponents = UriComponentsBuilder.fromPath(request.getRequestURI()).build();
 
-			if (isFrontendRequest(uriComponents, this.servletContext.getContextPath())) {
-				if (isJavaScriptUrl(uriComponents)) {
+			String extension = getExtension(uriComponents);
+			if (!"".equals(extension) && isFrontendRequest(uriComponents, this.servletContext.getContextPath())) {
+				if ("js".equals(extension)) {
 					Resource typeScriptFile = findTypeScriptFile(uriComponents);
 
 					if (typeScriptFile.exists()) {
@@ -86,8 +87,12 @@ public class EsBuildFilter implements Filter {
 		return false;
 	}
 	
-	static boolean isJavaScriptUrl(UriComponents uriComponents) {
-		return uriComponents.getPathSegments().get(uriComponents.getPathSegments().size() - 1).toLowerCase().endsWith(".js");
+	/**
+	 * Returns the lower case extension if there is any. Otherwise empty string.
+	 */
+	static String getExtension(UriComponents uriComponents) {
+		String lastSegment = uriComponents.getPathSegments().get(uriComponents.getPathSegments().size() - 1).toLowerCase();
+		return lastSegment.contains(".") ? lastSegment.substring(lastSegment.lastIndexOf('.') + 1) : "";
 	}
 
 	static String getPathWithoutFrontendPrefix(UriComponents uriComponents, String contextPath) {

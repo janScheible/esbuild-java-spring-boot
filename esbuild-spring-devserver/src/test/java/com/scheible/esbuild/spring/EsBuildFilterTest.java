@@ -34,11 +34,14 @@ class EsBuildFilterTest {
 	}
 
 	@Test
-	void testIsJavaScriptUrl() {
-		assertThat(EsBuildFilter.isJavaScriptUrl(
-				UriComponentsBuilder.fromHttpUrl("http://localhost/script.js").build())).isTrue();
+	void testGetExtension() {
+		assertThat(EsBuildFilter.getExtension(
+				UriComponentsBuilder.fromHttpUrl("http://localhost/script.js").build())).isEqualTo("js");
 
-		assertThat(EsBuildFilter.isJavaScriptUrl(
-				UriComponentsBuilder.fromHttpUrl("http://localhost/script.css").build())).isFalse();
+		assertThat(EsBuildFilter.getExtension(
+				UriComponentsBuilder.fromHttpUrl("http://localhost/script.CsS").build())).isEqualTo("css");		
+		
+		assertThat(EsBuildFilter.getExtension(
+				UriComponentsBuilder.fromHttpUrl("http://localhost/script").build())).isEqualTo("");
 	}
 }

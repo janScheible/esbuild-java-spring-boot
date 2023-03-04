@@ -36,5 +36,6 @@ class ImportMapperTest {
 	void testToParts() {
 		assertThat(ImportMapper.toParts(Path.of("test", "script.js"))).isEqualTo(List.of("test", "script"));
 		assertThat(ImportMapper.toParts(Path.of("test", "script.ts"))).isEqualTo(List.of("test", "script"));
+		assertThat(ImportMapper.toParts(Path.of("test", "script.d.ts"))).isEqualTo(List.of("test", "script"));
 	}
 }

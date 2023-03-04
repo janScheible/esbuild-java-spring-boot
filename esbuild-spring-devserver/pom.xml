@@ -4,7 +4,7 @@
 
 	<groupId>com.scheible.esbuild</groupId>
 	<artifactId>esbuild-spring-devserver</artifactId>
-	<version>0.1.1</version>
+	<version>0.1.2</version>
 
 	<url>https://github.com/janScheible/esbuild-java-spring-boot</url>
 
@@ -66,7 +66,7 @@
 		<dependency>
 			<groupId>com.scheible.esbuild</groupId>
 			<artifactId>esbuild-java-bindings</artifactId>
-			<version>0.2.0</version>
+			<version>0.2.1</version>
 		</dependency>
 
 		<dependency>

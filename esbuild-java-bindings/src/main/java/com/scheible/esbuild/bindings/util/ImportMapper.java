@@ -67,7 +67,12 @@ public class ImportMapper {
 			if (i != path.getNameCount() - 1) {
 				pathParts.add(subPath);
 			} else {
-				pathParts.add(subPath.contains(".") ? subPath.substring(0, subPath.lastIndexOf('.')) : subPath);
+				boolean isTypeDeclarationFile = subPath.toLowerCase().endsWith(".d.ts");
+				if (isTypeDeclarationFile) {
+					pathParts.add(subPath.substring(0, subPath.length() - 5));
+				} else {
+					pathParts.add(subPath.contains(".") ? subPath.substring(0, subPath.lastIndexOf('.')) : subPath);
+				}
 			}
 		}
 

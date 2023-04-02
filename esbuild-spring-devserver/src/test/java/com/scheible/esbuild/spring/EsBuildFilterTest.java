@@ -43,5 +43,8 @@ class EsBuildFilterTest {
 		
 		assertThat(EsBuildFilter.getExtension(
 				UriComponentsBuilder.fromHttpUrl("http://localhost/script").build())).isEqualTo("");
+
+		assertThat(EsBuildFilter.getExtension(
+				UriComponentsBuilder.fromHttpUrl("http://localhost/").build())).isEqualTo("");
 	}
 }

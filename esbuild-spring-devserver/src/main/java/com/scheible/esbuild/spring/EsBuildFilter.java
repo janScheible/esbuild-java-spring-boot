@@ -91,7 +91,8 @@ public class EsBuildFilter implements Filter {
 	 * Returns the lower case extension if there is any. Otherwise empty string.
 	 */
 	static String getExtension(UriComponents uriComponents) {
-		String lastSegment = uriComponents.getPathSegments().get(uriComponents.getPathSegments().size() - 1).toLowerCase();
+		String lastSegment = uriComponents.getPathSegments().isEmpty() ? ""
+				: uriComponents.getPathSegments().get(uriComponents.getPathSegments().size() - 1).toLowerCase();
 		return lastSegment.contains(".") ? lastSegment.substring(lastSegment.lastIndexOf('.') + 1) : "";
 	}
 

@@ -15,7 +15,7 @@ import java.util.Set;
  */
 class Executable {
 
-	static final String ESBUILD_VERSION = "0.16.12";
+	static final String ESBUILD_VERSION = "0.17.12";
 
 	private enum OperatingSystem {
 		WINDOWS("win32", ".exe"), LINUX("linux", "");

@@ -15,6 +15,14 @@ That means no fiddling with npm and no separate dev-server with its own log to w
 
 ## esbuild-java-bindings
 
+```xml
+<dependency>
+	<groupId>com.scheible.esbuild</groupId>
+	<artifactId>esbuild-java-bindings</artifactId>
+	<version>0.2.2</version>
+</dependency>
+```
+
 Implementation of the [esbuild binary protocol](https://github.com/evanw/esbuild/blob/main/lib/shared/stdio_protocol.ts).
 Allows to spawn an esbuild process and use it from Java.
 Currently protocol support is limited to only `TransformRequest` and `TransformResponse`.
@@ -38,6 +46,14 @@ The `import` statements of the TypeScript files are resolved by a dynamically cr
 
 ## esbuild-maven-plugin
 
+```xml
+<dependency>
+	<groupId>com.scheible.esbuild</groupId>
+	<artifactId>esbuild-maven-plugin</artifactId>
+	<version>0.1.3</version>
+</dependency>
+```
+
 A simplistic Maven plugin to transform all `.ts` and `.tsx` files to JavaScript.
 Also a static import map for all `.ts` and `.tsx` files is generated.
 All other file types are just copied.
@@ -45,6 +61,14 @@ Default target directory is `./target/classes/static/frontend`.
 The goal can be run with `com.scheible.esbuild:esbuild-maven-plugin:prepare-frontend`.
 
 ## esbuild-devserver-spring-boot-starter
+
+```xml
+<dependency>
+	<groupId>com.scheible.esbuild</groupId>
+	<artifactId>esbuild-devserver-spring-boot-starter</artifactId>
+	<version>0.1.3</version>
+</dependency>
+```
 
 Spring Boot starter to enable the dev-server without any needed for additional configuration.
 The dev-server is only available when `spring-boot-devtools` is on the classpath.

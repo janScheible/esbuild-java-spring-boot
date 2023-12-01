@@ -19,7 +19,7 @@ That means no fiddling with npm and no separate dev-server with its own log to w
 <dependency>
 	<groupId>com.scheible.esbuild</groupId>
 	<artifactId>esbuild-java-bindings</artifactId>
-	<version>0.2.2</version>
+	<version>0.2.3</version>
 </dependency>
 ```
 
@@ -50,7 +50,7 @@ The `import` statements of the TypeScript files are resolved by a dynamically cr
 <dependency>
 	<groupId>com.scheible.esbuild</groupId>
 	<artifactId>esbuild-maven-plugin</artifactId>
-	<version>0.1.3</version>
+	<version>0.1.4</version>
 </dependency>
 ```
 
@@ -66,7 +66,7 @@ The goal can be run with `com.scheible.esbuild:esbuild-maven-plugin:prepare-fron
 <dependency>
 	<groupId>com.scheible.esbuild</groupId>
 	<artifactId>esbuild-devserver-spring-boot-starter</artifactId>
-	<version>0.1.3</version>
+	<version>0.1.4</version>
 </dependency>
 ```
 

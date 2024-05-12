@@ -19,7 +19,7 @@ That means no fiddling with npm and no separate dev-server with its own log to w
 <dependency>
 	<groupId>com.scheible.esbuild</groupId>
 	<artifactId>esbuild-java-bindings</artifactId>
-	<version>0.2.3</version>
+	<version>0.3.0</version>
 </dependency>
 ```
 
@@ -52,7 +52,7 @@ The used esbuild version can be dynamically upgraded by placing the binaries in 
 <dependency>
 	<groupId>com.scheible.esbuild</groupId>
 	<artifactId>esbuild-maven-plugin</artifactId>
-	<version>0.1.4</version>
+	<version>0.2.0</version>
 </dependency>
 ```
 
@@ -70,7 +70,7 @@ The used esbuild version can be dynamically upgraded by placing the binaries in 
 <dependency>
 	<groupId>com.scheible.esbuild</groupId>
 	<artifactId>esbuild-devserver-spring-boot-starter</artifactId>
-	<version>0.1.4</version>
+	<version>0.2.0</version>
 </dependency>
 ```
 

@@ -1,5 +1,6 @@
 package com.scheible.esbuild.bindings;
 
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Files;
@@ -14,8 +15,6 @@ import java.util.Set;
  * @author sj
  */
 class Executable {
-
-	static final String ESBUILD_VERSION = "0.19.7";
 
 	private enum OperatingSystem {
 		WINDOWS("win32", ".exe"), LINUX("linux", "");
@@ -59,22 +58,33 @@ class Executable {
 		}
 	};
 
-	private static String getExecutableName(OperatingSystem operatingSystem) {
+	private static String getExecutableName(String esBuildVersion, OperatingSystem operatingSystem) {
 		return "esbuild-" + operatingSystem.name + "-" + ProcessorArch.identify().value + "-"
-				+ ESBUILD_VERSION + operatingSystem.extension;
+				+ esBuildVersion + operatingSystem.extension;
 	}
 
-	static Path copyToTarget() throws IOException {
+	static Path copyToTarget(String esBuildVersion) throws IOException {
 		OperatingSystem operatingSystem = OperatingSystem.identify();
 
-		String executableName = getExecutableName(operatingSystem);
-		Path file = Path.of("./target").resolve(executableName);
+		String executableName = getExecutableName(esBuildVersion, operatingSystem);
+		Path file = Path.of("./target").resolve(executableName).toAbsolutePath();
 
 		synchronized (Executable.class) {
 			if (!Files.exists(file)) {
 				Files.createDirectories(file.getParent());
-				try (InputStream executableInput = Thread.currentThread().getContextClassLoader().getResourceAsStream(executableName)) {
-					Files.copy(executableInput, file, StandardCopyOption.REPLACE_EXISTING);
+				try (InputStream executableClasspathInput = Thread.currentThread().getContextClassLoader().getResourceAsStream(executableName)) {
+					if (executableClasspathInput == null) {
+						try (InputStream executableFileInput = new FileInputStream(Path.of("./src/main/resources", executableName).toFile())) {
+							if (executableFileInput == null) {
+								throw new IllegalStateException("The executable '" + executableName
+										+ "' was neither found on the classpath nor in the resources directory.");
+							} else {
+								Files.copy(executableFileInput, file, StandardCopyOption.REPLACE_EXISTING);
+							}
+						}
+					} else {
+						Files.copy(executableClasspathInput, file, StandardCopyOption.REPLACE_EXISTING);
+					}
 				}
 
 				if (operatingSystem == OperatingSystem.LINUX) {

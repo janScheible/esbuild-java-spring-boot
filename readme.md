@@ -44,6 +44,8 @@ esbuild errors are displayed as an nice overlay in the browser:
 
 The `import` statements of the TypeScript files are resolved by a dynamically created [import map](https://www.digitalocean.com/community/tutorials/how-to-dynamically-import-javascript-with-import-maps).
 
+The used esbuild version can be dynamically upgraded by placing the binaries in `./src/main/resources` (naming like in esbuild-java-bindings project) and setting the property `esbuild-spring-devserver.esbuild-version` of the Spring Boot application.
+
 ## esbuild-maven-plugin
 
 ```xml
@@ -59,6 +61,8 @@ Also a static import map for all `.ts` and `.tsx` files is generated.
 All other file types are just copied.
 Default target directory is `./target/classes/static/frontend`.
 The goal can be run with `com.scheible.esbuild:esbuild-maven-plugin:prepare-frontend`.
+
+The used esbuild version can be dynamically upgraded by placing the binaries in `./src/main/resources` (naming like in esbuild-java-bindings project) and setting the configuration property `<esBuildVersion>` of the Maven plugin.
 
 ## esbuild-devserver-spring-boot-starter
 

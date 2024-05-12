@@ -29,6 +29,8 @@ import org.slf4j.LoggerFactory;
  * @author sj
  */
 public class EsBuild {
+
+	static final String ESBUILD_VERSION = "0.19.7";
 	
 	private static final List<String> STANDARD_RUN_FLAGS = List.of("--color=false");
 
@@ -52,11 +54,11 @@ public class EsBuild {
 	private final AtomicBoolean reading = new AtomicBoolean(true);
 	private final Thread readThread;
 
-	private EsBuild(Process process) {
+	private EsBuild(String esBuildVersion, Process process) {
 		this.process = process;
 
 		this.readThread = new Thread(() -> {
-			this.logger.info("esbuild {} is running...", Executable.ESBUILD_VERSION);
+			this.logger.info("esbuild {} is running...", esBuildVersion);
 			boolean firstPacket = true;
 
 			byte[] packetLengthBytes = new byte[4];
@@ -128,13 +130,18 @@ public class EsBuild {
 		});
 		this.readThread.setName("EsBuild Read Thread");
 	}
-	
+
 	public static String run(Path workDir, String... args) throws IOException, InterruptedException {
+		return run(null, workDir, args);
+	}
+
+	public static String run(String esBuildVersion, Path workDir, String... args) throws IOException, InterruptedException {
 		if(args.length == 0) {
 			throw new IllegalArgumentException("At least one argument must be passed!");
 		}
-		
-		Path executable = Executable.copyToTarget();
+
+		String finalEsBuildVersion = Optional.ofNullable(esBuildVersion).orElse(ESBUILD_VERSION);
+		Path executable = Executable.copyToTarget(finalEsBuildVersion);
 
 		List<String> command = new ArrayList<>();
 		command.add(executable.toString());
@@ -169,17 +176,22 @@ public class EsBuild {
 		return output.toString();
 	}
 
-	public static EsBuild start() throws IOException {		
+	public static EsBuild start() throws IOException {
+		return start(null);
+	}
+
+	public static EsBuild start(String esBuildVersion) throws IOException {
 		synchronized (INSTANCE_LOCK) {
 			if(instance != null) {
 				instanceShareCounter++;
 				return instance;
 			} else {
-				Path executable = Executable.copyToTarget();
+				String finalEsBuildVersion = Optional.ofNullable(esBuildVersion).orElse(ESBUILD_VERSION);
+				Path executable = Executable.copyToTarget(finalEsBuildVersion);
 
-				ProcessBuilder builder = new ProcessBuilder(executable.toString(), "--service=" + Executable.ESBUILD_VERSION, "--ping");
+				ProcessBuilder builder = new ProcessBuilder(executable.toString(), "--service=" + finalEsBuildVersion, "--ping");
 				Process process = builder.redirectErrorStream(true).start();
-				EsBuild esBuild = new EsBuild(process);
+				EsBuild esBuild = new EsBuild(finalEsBuildVersion, process);
 				esBuild.readThread.start();
 				
 				instance = esBuild;				

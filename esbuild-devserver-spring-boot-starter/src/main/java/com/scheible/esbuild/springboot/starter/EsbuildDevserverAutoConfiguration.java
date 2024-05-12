@@ -10,6 +10,7 @@ import com.scheible.esbuild.spring.importmap.DevToolsImportMapGenerator;
 import com.scheible.esbuild.spring.importmap.JarImportMapGenerator;
 import jakarta.servlet.ServletContext;
 import java.util.Optional;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.AutoConfiguration;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnClass;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
@@ -44,8 +45,9 @@ public class EsbuildDevserverAutoConfiguration {
 
 		@Bean
 		@ConditionalOnMissingBean
-		EsBuildService buildService(ResourceLoader resourceLoader) {
-			return new EsBuildService(resourceLoader);
+		EsBuildService buildService(ResourceLoader resourceLoader,
+				@Value("${esbuild-spring-devserver.esbuild-version}") Optional<String> esBuildVersion) {
+			return new EsBuildService(resourceLoader, esBuildVersion);
 		}
 
 		@Bean

@@ -6,6 +6,7 @@ import com.scheible.esbuild.bindings.TranspilationResult;
 import com.scheible.esbuild.bindings.util.TsConfig;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
+import java.util.Optional;
 import java.io.IOException;
 import java.io.UncheckedIOException;
 import java.util.concurrent.ExecutionException;
@@ -53,12 +54,14 @@ public class EsBuildService implements ServletContextListener {
 	protected final Logger logger = LoggerFactory.getLogger(getClass());
 	
 	private final ResourceLoader resourceLoader;
+	private final Optional<String> esBuildVersion;
 
 	private EsBuild esBuild;
 	private String tsConfigJson;
 
-	public EsBuildService(ResourceLoader resourceLoader) {
+	public EsBuildService(ResourceLoader resourceLoader, Optional<String> esBuildVersion) {
 		this.resourceLoader = resourceLoader;
+		this.esBuildVersion = esBuildVersion;
 	}
 	
 	@Override
@@ -67,7 +70,7 @@ public class EsBuildService implements ServletContextListener {
 			Resource tsConfigResource = resourceLoader.getResource("file:./src/main/frontend/tsconfig.json");
 			this.tsConfigJson = TsConfig.readAsSingleLine(tsConfigResource.getInputStream());
 
-			this.esBuild = EsBuild.start();
+			this.esBuild = this.esBuildVersion.isEmpty() ? EsBuild.start() : EsBuild.start(this.esBuildVersion.get());
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}

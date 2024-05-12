@@ -45,6 +45,9 @@ public class PrepareFrontendMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.build.outputDirectory}") // ./taget/classes
 	private File outputDirFile;
 
+	@Parameter(property = "esbuild-maven.esbuild-version")
+	private String esBuildVersion;
+
 	@Parameter(property = "esbuild-maven.skip", defaultValue = "${esbuild-maven.skip}")
 	private boolean skip;
 
@@ -85,7 +88,7 @@ public class PrepareFrontendMojo extends AbstractMojo {
 			Path importMapFile = outputDir.resolve("import-map.json");
 
 			getLog().info("Transforming files (from src dir to target dir):");
-			transformTsFiles(srcDir, tsSrcFiles, targetDir, tsConfigJson, getLog());
+			transformTsFiles(srcDir, tsSrcFiles, targetDir, tsConfigJson, this.esBuildVersion, getLog());
 			getLog().info("Copying files (from src dir to target dir):");
 			copyNonTsFiles(srcDir, nonTsSrcFiles, targetDir, getLog());
 			writeImportMap(srcDir, tsSrcFiles, libDir, tsLibFiles, outputDir, importMapFile, getLog());
@@ -100,8 +103,9 @@ public class PrepareFrontendMojo extends AbstractMojo {
 		}
 	}
 
-	static void transformTsFiles(Path srcDir, Collection<Path> tsSrcFiles, Path targetDir, String tsConfigJson, Log log) throws IOException, MojoExecutionException {
-		EsBuild esBuild = EsBuild.start();
+	static void transformTsFiles(Path srcDir, Collection<Path> tsSrcFiles, Path targetDir, String tsConfigJson,
+			String esBuildVersion, Log log) throws IOException, MojoExecutionException {
+		EsBuild esBuild = esBuildVersion == null ? EsBuild.start() : EsBuild.start(esBuildVersion);
 
 		for (Path tsSrcFile : tsSrcFiles) {
 			String originalFileName = tsSrcFile.getFileName().toString();

@@ -141,7 +141,7 @@ public class EsBuild {
 		}
 
 		String finalEsBuildVersion = Optional.ofNullable(esBuildVersion).orElse(ESBUILD_VERSION);
-		Path executable = Executable.copyToTarget(finalEsBuildVersion);
+		Path executable = Executable.copyToTarget(finalEsBuildVersion, workDir);
 
 		List<String> command = new ArrayList<>();
 		command.add(executable.toString());
@@ -177,19 +177,23 @@ public class EsBuild {
 	}
 
 	public static EsBuild start() throws IOException {
-		return start(null);
+		return start(null, Path.of("."));
 	}
 
-	public static EsBuild start(String esBuildVersion) throws IOException {
+	public static EsBuild start(Path workDir) throws IOException {
+		return start(null, workDir);
+	}
+
+	public static EsBuild start(String esBuildVersion, Path workDir) throws IOException {
 		synchronized (INSTANCE_LOCK) {
 			if(instance != null) {
 				instanceShareCounter++;
 				return instance;
 			} else {
 				String finalEsBuildVersion = Optional.ofNullable(esBuildVersion).orElse(ESBUILD_VERSION);
-				Path executable = Executable.copyToTarget(finalEsBuildVersion);
+				Path executable = Executable.copyToTarget(finalEsBuildVersion, workDir);
 
-				ProcessBuilder builder = new ProcessBuilder(executable.toString(), "--service=" + finalEsBuildVersion, "--ping");
+				ProcessBuilder builder = new ProcessBuilder(executable.toString(), "--service=" + finalEsBuildVersion, "--ping").directory(workDir.toFile());
 				Process process = builder.redirectErrorStream(true).start();
 				EsBuild esBuild = new EsBuild(finalEsBuildVersion, process);
 				esBuild.readThread.start();

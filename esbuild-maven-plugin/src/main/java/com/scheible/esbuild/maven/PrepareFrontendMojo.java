@@ -88,7 +88,7 @@ public class PrepareFrontendMojo extends AbstractMojo {
 			Path importMapFile = outputDir.resolve("import-map.json");
 
 			getLog().info("Transforming files (from src dir to target dir):");
-			transformTsFiles(srcDir, tsSrcFiles, targetDir, tsConfigJson, this.esBuildVersion, getLog());
+			transformTsFiles(srcDir, tsSrcFiles, targetDir, tsConfigJson, this.esBuildVersion, this.baseDirFile.toPath(), getLog());
 			getLog().info("Copying files (from src dir to target dir):");
 			copyNonTsFiles(srcDir, nonTsSrcFiles, targetDir, getLog());
 			writeImportMap(srcDir, tsSrcFiles, libDir, tsLibFiles, outputDir, importMapFile, getLog());
@@ -104,8 +104,8 @@ public class PrepareFrontendMojo extends AbstractMojo {
 	}
 
 	static void transformTsFiles(Path srcDir, Collection<Path> tsSrcFiles, Path targetDir, String tsConfigJson,
-			String esBuildVersion, Log log) throws IOException, MojoExecutionException {
-		EsBuild esBuild = esBuildVersion == null ? EsBuild.start() : EsBuild.start(esBuildVersion);
+			String esBuildVersion, Path workDir, Log log) throws IOException, MojoExecutionException {
+		EsBuild esBuild = esBuildVersion == null ? EsBuild.start(workDir) : EsBuild.start(esBuildVersion, workDir);
 
 		for (Path tsSrcFile : tsSrcFiles) {
 			String originalFileName = tsSrcFile.getFileName().toString();

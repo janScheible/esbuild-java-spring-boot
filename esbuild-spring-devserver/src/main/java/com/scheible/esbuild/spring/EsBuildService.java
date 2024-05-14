@@ -9,6 +9,7 @@ import jakarta.servlet.ServletContextListener;
 import java.util.Optional;
 import java.io.IOException;
 import java.io.UncheckedIOException;
+import java.nio.file.Path;
 import java.util.concurrent.ExecutionException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -70,7 +71,7 @@ public class EsBuildService implements ServletContextListener {
 			Resource tsConfigResource = resourceLoader.getResource("file:./src/main/frontend/tsconfig.json");
 			this.tsConfigJson = TsConfig.readAsSingleLine(tsConfigResource.getInputStream());
 
-			this.esBuild = this.esBuildVersion.isEmpty() ? EsBuild.start() : EsBuild.start(this.esBuildVersion.get());
+			this.esBuild = this.esBuildVersion.isEmpty() ? EsBuild.start(Path.of(".")) : EsBuild.start(this.esBuildVersion.get(), Path.of("."));
 		} catch (IOException ex) {
 			throw new UncheckedIOException(ex);
 		}

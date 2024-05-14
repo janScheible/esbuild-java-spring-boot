@@ -63,18 +63,19 @@ class Executable {
 				+ esBuildVersion + operatingSystem.extension;
 	}
 
-	static Path copyToTarget(String esBuildVersion) throws IOException {
+	static Path copyToTarget(String esBuildVersion, Path workDir) throws IOException {
 		OperatingSystem operatingSystem = OperatingSystem.identify();
 
 		String executableName = getExecutableName(esBuildVersion, operatingSystem);
-		Path file = Path.of("./target").resolve(executableName).toAbsolutePath();
+		Path file = workDir.toAbsolutePath().resolve(Path.of("./target").resolve(executableName));
 
 		synchronized (Executable.class) {
 			if (!Files.exists(file)) {
 				Files.createDirectories(file.getParent());
 				try (InputStream executableClasspathInput = Thread.currentThread().getContextClassLoader().getResourceAsStream(executableName)) {
 					if (executableClasspathInput == null) {
-						try (InputStream executableFileInput = new FileInputStream(Path.of("./src/main/resources", executableName).toFile())) {
+						try (InputStream executableFileInput = new FileInputStream(
+								workDir.toAbsolutePath().resolve(Path.of("./src/main/resources", executableName)).toFile())) {
 							if (executableFileInput == null) {
 								throw new IllegalStateException("The executable '" + executableName
 										+ "' was neither found on the classpath nor in the resources directory.");

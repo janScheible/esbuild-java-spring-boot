@@ -88,7 +88,8 @@ public class PrepareFrontendMojo extends AbstractMojo {
 			Path importMapFile = outputDir.resolve("import-map.json");
 
 			getLog().info("Transforming files (from src dir to target dir):");
-			transformTsFiles(srcDir, tsSrcFiles, targetDir, tsConfigJson, this.esBuildVersion, this.baseDirFile.toPath(), getLog());
+			transformTsFiles(srcDir, tsSrcFiles, targetDir, tsConfigJson, this.esBuildVersion,
+					this.baseDirFile.toPath().toAbsolutePath(), getLog());
 			getLog().info("Copying files (from src dir to target dir):");
 			copyNonTsFiles(srcDir, nonTsSrcFiles, targetDir, getLog());
 			writeImportMap(srcDir, tsSrcFiles, libDir, tsLibFiles, outputDir, importMapFile, getLog());
